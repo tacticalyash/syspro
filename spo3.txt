@@ -1,0 +1,64 @@
+public class TestJNI {
+static {
+System.loadLibrary
+
+(“cal"); // Load native library at runtime
+// cal.dll (Windows) or libcal.so (Unix)
+}
+// Declare a native method add() that receives nothing and returns void private native int add
+(int n1,int n2);
+// Test Driver
+public static void main(String[] args) {
+// invoke the native method
+System.out.println(“Addition is=”+new TestJNI().add(10,20);
+} }
+
+compile java code 
+javac testjni.java
+
+
+2. Create the C/C++ Header file - TestJNI.h
+javah -jni TestJNI
+
+
+//c code
+
+#include <jni.h>
+#include <stdio.h>
+#include “TestJNI.h"
+// Implementation of native method add() of TestJNI class
+JNIEXPORT jint JNICALL Java_TestJNI_add(JNIEnv *env, jobject thisObj,jint n1,jint n2)
+{
+jint res;
+res=n1+n2;
+return res;
+}
+Compile c-program:
+$gcc -I /usr/local/jdk1.8.0_91/include /usr/local/jdk1.8.0_91/include/linux -o libcal.so
+–shared TestJNI.c
+
+
+Compile c-program:
+$gcc -I /usr/local/jdk1.8.0_91/include /usr/local/jdk1.8.0_91/include/linux -o libcal.so
+–shared TestJNI.c
+
+4. Run java program
+$java -Djava.library.path=. TestJNI
+
+Output
+Addition is=30
+
+Command use for Above program
+$javac TestJNI.java
+$javac TestJNI.java
+$javah -jni TestJNI
+$locate  jni.h
+$locate jni_md.h
+$gcc -I /usr/lib/jvm/java-8-openjdk-amd64/include/  -I /home/gurukul/Downloads/pycharm-community-2019.1.3/jre64/include/linux/ -o libcal.so -shared TestJNI.c
+$java TestJNI
+$java -Djava.library.path=. TestJNI
+ 
+Addition is =30
+ 
+
+

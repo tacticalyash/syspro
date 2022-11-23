@@ -1,0 +1,328 @@
+# Java implementation of FIFO page replacement in Operating Systems.
+ 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+ 
+ 
+class Test
+{
+    // Method to find page faults using FIFO
+    static int pageFaults(int pages[], int n, int capacity)
+    {
+        // To represent a set of current pages. We use
+        // an unordered_set so that we quickly check
+        // if a page is present in set or not
+        HashSet<Integer> s = new HashSet<>(capacity);
+      
+        // To store the pages in FIFO manner
+        Queue<Integer> indexes = new LinkedList<>() ;
+      
+        // Start from initial page
+        int page_faults = 0;
+        for (int i=0; i<n; i++)
+        {
+            // Check if the set can hold more pages
+            if (s.size() < capacity)
+            {
+                // Insert it into set if not present
+                // already which represents page fault
+                if (!s.contains(pages[i]))
+                {
+                    s.add(pages[i]);
+      
+                    // increment page fault
+                    page_faults++;
+      
+                    // Push the current page into the queue
+                    indexes.add(pages[i]);
+                }
+            }
+      
+            // If the set is full then need to perform FIFO
+            // i.e. remove the first page of the queue from
+            // set and queue both and insert the current page
+            else
+            {
+                // Check if current page is not already
+                // present in the set
+                if (!s.contains(pages[i]))
+                {
+                    //Pop the first page from the queue
+                    int val = indexes.peek();
+      
+                    indexes.poll();
+      
+                    // Remove the indexes page
+                    s.remove(val);
+      
+                    // insert the current page
+                    s.add(pages[i]);
+      
+                    // push the current page into
+                    // the queue
+                    indexes.add(pages[i]);
+      
+                    // Increment page faults
+                    page_faults++;
+                }
+            }
+        }
+      
+        return page_faults;
+    }
+     
+    // Driver method
+    public static void main(String args[])
+    {
+        int pages[] = {7, 0, 1, 2, 0, 3, 0, 4,
+                        2, 3, 0, 3, 2};
+  
+        int capacity = 4;
+        System.out.println(pageFaults(pages, pages.length, capacity));
+    }
+}
+ 
+ 
+Output:-   7 FIFO
+/*
+Problem Statement :
+Write a Java Program (using OOP features) to implement paging simulation using
+1. Least Recently Used (LRU)
+2. Optimal algorithm
+                                                                                                ****LRU****
+*/
+import java.io.*;
+      class lru
+        {
+        public static void main(String args[])throws IOException
+         {
+                                  BufferedReader obj=new BufferedReader(new InputStreamReader(System.in));
+                                 int f,page=0,ch,pgf=0,n,chn=0;
+                                  boolean flag;
+                                 int pages[];                       //pgf-page fault
+                      
+                                System.out.println("1.LRU");
+                               int pt=0;
+               System.out.println("enter no. of frames: ");
+                                f=Integer.parseInt(obj.readLine());
+                               int frame[]=new int[f];
+ 
+ 
+                               for(int i=0;i<f;i++)
+                               {
+                                               frame[i]=-1;
+                               }
+ 
+                               System.out.println("enter the no of pages ");
+                               n=Integer.parseInt(obj.readLine());
+ 
+                        pages=new int[n];
+                               System.out.println("enter the page no ");
+ 
+                               for(int j=0;j<n;j++)
+                               pages[j]=Integer.parseInt(obj.readLine());
+                               
+                               int pg=0;
+                               for(pg=0;pg<n;pg++)
+               {
+                                               page=pages[pg];                                                              
+                                               flag=true;
+                                               for(int j=0;j<f;j++)
+                                               {
+                                                               if(page==frame[j])
+                                                               {
+                                                                               flag=false;
+                                                                               break;
+                                                                }
+                                               }
+                                                int temp,h=3,i;
+                                               if(flag)
+                               {
+                                               if( frame[1]!=-1 && frame[2]!=-1 && frame[0]!=-1)
+                                                                {
+                                                                                temp=pages[pg-3];
+                                                                                if(temp==pages[pg-2] || temp==pages[pg-1])
+                                                                                                temp=pages[pg-4];    
+                                                                                     
+                                                                                for(i=0;i<f;i++)
+                                                                                                if(temp==frame[i])
+                                                                                                                break;
+                                                                                frame[i]=pages[pg];
+                                                                }
+                                                                else
+                                                                {
+                                                                                if(frame[0]==-1)
+                                                                                                frame[0]=pages[pg];
+                                                                                else if(frame[1]==-1)
+                                                                                                frame[1]=pages[pg];
+                                                                                else if(frame[2]==-1)
+                                                                                                frame[2]=pages[pg];
+                                                                } 
+                                                  
+ 
+                                                               System.out.print("frame :");
+                                                               for(int j=0;j<f;j++)
+                                                               System.out.print(frame[j]+"   ");
+                                                                System.out.println();
+                                                               pgf++;
+                                               }
+                                               else
+                                               {
+                                                               System.out.print("frame :");
+                                                               for(int j=0;j<f;j++)
+                                                               System.out.print(frame[j]+"  ");
+                                                                System.out.println();
+                                               }
+                
+                               }//for
+       
+               System.out.println("Page fault:"+pgf);
+ 
+}//main
+}//class
+ 
+ 
+/*
+OUTPUT:-
+akshay@akshay-1011PX:~/Desktop/SPOS/LRU$ javac lru.java
+akshay@akshay-1011PX:~/Desktop/SPOS/LRU$ java lru
+1.LRU
+enter no. of frames:
+4
+enter the no of pages
+10
+enter the page no
+1
+0
+1
+2
+3
+7
+8
+1
+5
+2
+frame :1   -1   -1   -1  
+frame :1   0   -1   -1  
+frame :1  0  -1  -1 
+frame :1   0   2   -1  
+frame :1   3   2   -1  
+frame :7   3   2   -1  
+frame :7   3   8   -1  
+frame :7   1   8   -1  
+frame :5   1   8   -1  
+frame :5   1   2   -1  
+Page fault:9
+akshay@akshay-1011PX:~/Desktop/SPOS/LRU$
+*/
+/*
+ 
+ 
+ 
+Problem Statement :
+Write a Java Program (using OOP features) to implement paging simulation using
+1. Least Recently Used (LRU)
+2. Optimal algorithm
+ 
+                                                                                                ****Optimal****
+/ Java program to demonstrate optimal page
+// replacement algorithm.
+import java.io.*;
+import java.util.*;
+ 
+class GFG {
+ 
+    // Function to check whether a page exists
+    // in a frame or not
+    static boolean search(int key, int[] fr)
+    {
+        for (int i = 0; i < fr.length; i++)
+            if (fr[i] == key)
+                return true;
+        return false;
+    }
+ 
+    // Function to find the frame that will not be used
+    // recently in future after given index in pg[0..pn-1]
+    static int predict(int pg[], int[] fr, int pn,
+                       int index)
+    {
+        // Store the index of pages which are going
+        // to be used recently in future
+        int res = -1, farthest = index;
+        for (int i = 0; i < fr.length; i++) {
+            int j;
+            for (j = index; j < pn; j++) {
+                if (fr[i] == pg[j]) {
+                    if (j > farthest) {
+                        farthest = j;
+                        res = i;
+                    }
+                    break;
+                }
+            }
+ 
+            // If a page is never referenced in future,
+            // return it.
+            if (j == pn)
+                return i;
+        }
+ 
+        // If all of the frames were not in future,
+        // return any of them, we return 0. Otherwise
+        // we return res.
+        return (res == -1) ? 0 : res;
+    }
+ 
+    static void optimalPage(int pg[], int pn, int fn)
+    {
+        // Create an array for given number of
+        // frames and initialize it as empty.
+        int[] fr = new int[fn];
+ 
+        // Traverse through page reference array
+        // and check for miss and hit.
+        int hit = 0;
+        int index = 0;
+        for (int i = 0; i < pn; i++) {
+ 
+            // Page found in a frame : HIT
+            if (search(pg[i], fr)) {
+                hit++;
+                continue;
+            }
+ 
+            // Page not found in a frame : MISS
+ 
+            // If there is space available in frames.
+            if (index < fn)
+                fr[index++] = pg[i];
+ 
+            // Find the page to be replaced.
+            else {
+                int j = predict(pg, fr, pn, i + 1);
+                fr[j] = pg[i];
+            }
+        }
+        System.out.println("No. of hits = " + hit);
+        System.out.println("No. of misses = " + (pn - hit));
+    }
+ 
+    // driver function
+    public static void main(String[] args)
+    {
+ 
+        int pg[]
+            = { 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2 };
+        int pn = pg.length;
+        int fn = 4;
+        optimalPage(pg, pn, fn);
+    }
+}
+ 
+ 
+ 
+Output:
+No. of hits = 7
+No. of misses = 6
